@@ -26,6 +26,18 @@ function createTaskElement(task) {
   const li = document.createElement('li');
   const span = document.createElement('span');
   span.textContent = task.text;
+  span.contentEditable = true;
+
+  span.addEventListener('input', function() {
+    updateTaskText(li.id, span.textContent);
+  });
+
+  span.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      span.blur();
+    }
+  });
 
   if (task.done) { li.classList.add('done'); }
 
@@ -42,6 +54,15 @@ function createTaskElement(task) {
   li.appendChild(span);
   li.appendChild(removeBtn);
   toDoList.appendChild(li);
+}
+
+function updateTaskText(id, newText) {
+  const tasks = getTasks();
+  const taskIndex = tasks.findIndex(task => task.id == id);
+  if (taskIndex !== -1) {
+    tasks[taskIndex] = { ...tasks[taskIndex], text: newText };
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
 }
 
 function handleTaskClick(event) {
