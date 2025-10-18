@@ -1,3 +1,7 @@
 .done span{
   text-decoration: line-through;
 }
+li.dragging {
+  opacity: 0.5;
+  background-color: #f0f0f0;
+}

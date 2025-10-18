@@ -1,20 +1,46 @@
-const taskInput = document.getElementById('taskInput');
-const addBtn = document.getElementById('addBtn');
-const toDoList = document.getElementById('toDoList');
-const doneList = document.getElementById('doneList');
+// Creating a main input field
 
-window.addEventListener('DOMContentLoaded', loadTasks);
+const main = document.createElement('main');
+
+const taskInput = document.createElement('input');
+taskInput.type = 'text';
+taskInput.classList.add('taskInput');
+taskInput.placeholder = 'Задача...';
+
+const dateInputMain = document.createElement('input');
+dateInputMain.type = 'date';
+dateInputMain.value = new Date().toISOString().split('T')[0];
+
+const addBtn = document.createElement('button');
+addBtn.classList.add('addBtn');
+addBtn.textContent = 'Добавить';
+
+const toDoList = document.createElement('ul');
+toDoList.classList.add('toDoList');
+
+main.append(taskInput, dateInputMain, addBtn, toDoList);
+document.body.appendChild(main);
+
+// Rendering tasks from local storage
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadTasks();
+  enableDragAndDrop();
+});
 
 addBtn.addEventListener('click', addTask);
 toDoList.addEventListener('click', handleTaskClick);
+
+// Functions
 
 function addTask() {
   const text = taskInput.value.trim();
   if (!text) return;
 
+  const date = dateInputMain.value;
+
   const tasks = getTasks();
-  const id = tasks.length == 0 ? 0 : tasks[tasks.length - 1].id + 1;
-  const task = { id, text, done: false };
+  const task = { id: tasks.length, text: text, done: false, date: date };
   tasks.push(task);
   localStorage.setItem('tasks', JSON.stringify(tasks));
 
@@ -24,11 +50,14 @@ function addTask() {
 
 function createTaskElement(task) {
   const li = document.createElement('li');
+  li.id = task.id;
+  li.draggable = true;
+
   const span = document.createElement('span');
   span.textContent = task.text;
   span.contentEditable = true;
 
-  span.addEventListener('input', function() {
+  span.addEventListener('input', function () {
     updateTaskText(li.id, span.textContent);
   });
 
@@ -41,6 +70,14 @@ function createTaskElement(task) {
 
   if (task.done) { li.classList.add('done'); }
 
+  const dateInput = document.createElement('input');
+  dateInput.type = 'date';
+  dateInput.value = task.date;
+  dateInput.classList.add('task-date');
+  dateInput.addEventListener('change', () => {
+    updateTaskDate(li.id, dateInput.value);
+  });
+
   const doneBtn = document.createElement('button');
   doneBtn.textContent = '✓';
   doneBtn.classList.add('done');
@@ -52,6 +89,7 @@ function createTaskElement(task) {
   li.id = task.id;
   li.appendChild(doneBtn);
   li.appendChild(span);
+  li.appendChild(dateInput);
   li.appendChild(removeBtn);
   toDoList.appendChild(li);
 }
@@ -61,6 +99,15 @@ function updateTaskText(id, newText) {
   const taskIndex = tasks.findIndex(task => task.id == id);
   if (taskIndex !== -1) {
     tasks[taskIndex] = { ...tasks[taskIndex], text: newText };
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+}
+
+function updateTaskDate(id, newDate) {
+  const tasks = getTasks();
+  const taskIndex = tasks.findIndex(task => task.id == id);
+  if (taskIndex !== -1) {
+    tasks[taskIndex].date = newDate;
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
 }
@@ -78,10 +125,43 @@ function handleTaskClick(event) {
   if (target.classList.contains('remove')) {
     removeTask(li.id);
     li.remove();
+    reindexTasks();
   }
 }
 
+function enableDragAndDrop() {
+  toDoList.addEventListener('dragstart', (e) => {
+    if (e.target.tagName === 'LI') e.target.classList.add('dragging');
+  });
+
+  toDoList.addEventListener('dragend', (e) => {
+    if (e.target.tagName === 'LI') {
+      e.target.classList.remove('dragging');
+      reindexTasks();
+    }
+  });
+
+  toDoList.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const dragging = toDoList.querySelector('.dragging');
+    if (!dragging) return;
+
+    let after = null;
+    for (const li of toDoList.querySelectorAll('li:not(.dragging)')) {
+      const rect = li.getBoundingClientRect();
+      if (e.clientY < rect.top + rect.height / 2) {
+        after = li;
+        break;
+      }
+    }
+
+    if (after) toDoList.insertBefore(dragging, after);
+    else toDoList.appendChild(dragging);
+  });
+}
+
 // localStorage
+
 function getTasks() {
   return JSON.parse(localStorage.getItem('tasks') || '[]');
 }
@@ -111,4 +191,30 @@ function removeTask(id) {
     tasks.splice(taskIndex, 1);
     localStorage.setItem('tasks', JSON.stringify(tasks));
   }
+}
+
+function reindexTasks() {
+  const tasks = getTasks();
+
+  tasks.forEach((task, i) => task.id = i);
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  const lis = document.querySelectorAll('.toDoList li');
+  lis.forEach((li, i) => li.id = i);
+}
+function reindexTasks() {
+  const listItems = document.querySelectorAll('.toDoList li'); // оставшиеся li
+  const tasks = getTasks();
+  const newTasks = [];
+
+  listItems.forEach((li, i) => {
+    const task = tasks.find(t => t.id == li.id);
+    if (task) {
+      task.id = i;
+      li.id = i;
+      newTasks.push(task);
+    }
+  });
+
+  localStorage.setItem('tasks', JSON.stringify(newTasks));
 }
