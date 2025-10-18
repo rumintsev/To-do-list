@@ -202,18 +202,24 @@ function reindexTasks() {
   const lis = document.querySelectorAll('.toDoList li');
   lis.forEach((li, i) => li.id = i);
 }
+
 function reindexTasks() {
-  const listItems = document.querySelectorAll('.toDoList li'); // оставшиеся li
-  const tasks = getTasks();
+  const listItems = document.querySelectorAll('.toDoList li');
   const newTasks = [];
 
   listItems.forEach((li, i) => {
-    const task = tasks.find(t => t.id == li.id);
-    if (task) {
-      task.id = i;
-      li.id = i;
-      newTasks.push(task);
-    }
+    const span = li.querySelector('span');
+    const dateInput = li.querySelector('input[type="date"]');
+    const done = li.classList.contains('done');
+
+    newTasks.push({
+      id: i,
+      text: span ? span.textContent : '',
+      date: dateInput ? dateInput.value : '',
+      done
+    });
+
+    li.id = i;
   });
 
   localStorage.setItem('tasks', JSON.stringify(newTasks));
