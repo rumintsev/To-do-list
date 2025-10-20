@@ -18,7 +18,46 @@ addBtn.textContent = 'Добавить';
 const toDoList = document.createElement('ul');
 toDoList.classList.add('toDoList');
 
-main.append(taskInput, dateInputMain, addBtn, toDoList);
+const searchInput = document.createElement('input');
+searchInput.type = 'text';
+searchInput.classList.add('searchInput');
+searchInput.placeholder = 'Название...';
+
+const filterSelect = document.createElement('select');
+filterSelect.classList.add('filterSelect');
+
+const optionAll = document.createElement('option');
+optionAll.value = 'all';
+optionAll.textContent = 'Все';
+
+const optionDone = document.createElement('option');
+optionDone.value = 'done';
+optionDone.textContent = 'Выполненные';
+
+const optionUndone = document.createElement('option');
+optionUndone.value = 'undone';
+optionUndone.textContent = 'Невыполненные';
+
+filterSelect.append(optionAll, optionDone, optionUndone);
+
+const sortDateBtn = document.createElement('button');
+sortDateBtn.classList.add('sortDateBtn');
+sortDateBtn.textContent = 'Сортировать по дате';
+
+const sortDirectionSelect = document.createElement('select');
+sortDirectionSelect.classList.add('sortDirectionSelect');
+
+const optionDesc = document.createElement('option');
+optionDesc.value = 'desc';
+optionDesc.textContent = '↑';
+
+const optionAsc = document.createElement('option');
+optionAsc.value = 'asc';
+optionAsc.textContent = '↓';
+
+sortDirectionSelect.append(optionDesc, optionAsc);
+
+main.append(taskInput, dateInputMain, addBtn, toDoList, searchInput, filterSelect, sortDateBtn, sortDirectionSelect);
 document.body.appendChild(main);
 
 // Rendering tasks from local storage
@@ -30,6 +69,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 addBtn.addEventListener('click', addTask);
 toDoList.addEventListener('click', handleTaskClick);
+sortDateBtn.addEventListener('click', sortByDate);
 
 // Functions
 
@@ -158,6 +198,24 @@ function enableDragAndDrop() {
     if (after) toDoList.insertBefore(dragging, after);
     else toDoList.appendChild(dragging);
   });
+}
+
+function sortByDate() {
+  const tasks = getTasks();
+  const direction = sortDirectionSelect.value;
+
+  tasks.sort((a, b) => {
+    if (!a.date) return 1;
+    if (!b.date) return -1;
+    const diff = new Date(a.date) - new Date(b.date);
+    return direction === 'asc' ? diff : -diff;
+  });
+
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+  while (toDoList.firstChild) {
+    toDoList.removeChild(toDoList.firstChild);
+  }
+  loadTasks();
 }
 
 // localStorage
