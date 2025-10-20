@@ -102,12 +102,12 @@ input[type="date"]:focus {
   word-break: break-word;
 }
 
-.toDoList li.done span {
+.toDoList li.doneTask span {
   text-decoration: line-through;
   color: #888888;
 }
 
-.toDoList li.done input {
+.toDoList li.doneTask input {
   color: #888888;
 }
 
@@ -151,7 +151,7 @@ li.dragging {
   border: none;
 }
 
-.toDoList li.done button.done {
+.toDoList li.doneTask button.done {
   background-color: #0C4651;
   color: white;
   border-color: #0C4651;

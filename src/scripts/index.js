@@ -129,7 +129,7 @@ function createTaskElement(task) {
     }
   });
 
-  if (task.done) { li.classList.add('done'); }
+  if (task.done) { li.classList.add('doneTask'); }
 
   const dateInput = document.createElement('input');
   dateInput.type = 'date';
@@ -188,7 +188,7 @@ function handleTaskClick(event) {
   if (!li) return;
 
   if (target.classList.contains('done')) {
-    li.classList.toggle('done');
+    li.classList.toggle('doneTask');
     doneTask(li.id);
   }
 
@@ -314,7 +314,7 @@ function removeTask(id) {
 function reindexTasks() {
   const listItems = document.querySelectorAll('.toDoList li');
   const tasks = getTasks();
-  
+
   if (listItems.length != tasks.length) return
 
   const newTasks = [];
@@ -322,7 +322,7 @@ function reindexTasks() {
   listItems.forEach((li, i) => {
     const span = li.querySelector('.text');
     const dateInput = li.querySelector('input[type="date"]');
-    const done = li.classList.contains('done');
+    const done = li.classList.contains('doneTask');
     newTasks.push({
       id: i,
       text: span.textContent,
