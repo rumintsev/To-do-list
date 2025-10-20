@@ -115,6 +115,7 @@ function createTaskElement(task) {
 
   const span = document.createElement('span');
   span.textContent = task.text;
+  span.classList.add('text');
   span.contentEditable = true;
 
   span.addEventListener('input', function () {
@@ -311,24 +312,17 @@ function removeTask(id) {
 }
 
 function reindexTasks() {
-  const tasks = getTasks();
-
-  tasks.forEach((task, i) => task.id = i);
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-
-  const lis = document.querySelectorAll('.toDoList li');
-  lis.forEach((li, i) => li.id = i);
-}
-
-function reindexTasks() {
   const listItems = document.querySelectorAll('.toDoList li');
+  const tasks = getTasks();
+  
+  if (listItems.length != tasks.length) return
+
   const newTasks = [];
 
   listItems.forEach((li, i) => {
-    const span = li.querySelector('span');
+    const span = li.querySelector('.text');
     const dateInput = li.querySelector('input[type="date"]');
     const done = li.classList.contains('done');
-
     newTasks.push({
       id: i,
       text: span.textContent,
