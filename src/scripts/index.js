@@ -15,9 +15,6 @@ const addBtn = document.createElement('button');
 addBtn.classList.add('addBtn');
 addBtn.textContent = 'Добавить';
 
-const toDoList = document.createElement('ul');
-toDoList.classList.add('toDoList');
-
 const searchInput = document.createElement('input');
 searchInput.type = 'text';
 searchInput.classList.add('searchInput');
@@ -57,7 +54,10 @@ optionAsc.textContent = '↓';
 
 sortDirectionSelect.append(optionDesc, optionAsc);
 
-main.append(taskInput, dateInputMain, addBtn, toDoList, searchInput, filterSelect, sortDateBtn, sortDirectionSelect);
+const toDoList = document.createElement('ul');
+toDoList.classList.add('toDoList');
+
+main.append(taskInput, dateInputMain, addBtn, searchInput, filterSelect, sortDateBtn, sortDirectionSelect, toDoList);
 document.body.appendChild(main);
 
 // Rendering tasks from local storage
@@ -70,6 +70,8 @@ window.addEventListener('DOMContentLoaded', () => {
 addBtn.addEventListener('click', addTask);
 toDoList.addEventListener('click', handleTaskClick);
 sortDateBtn.addEventListener('click', sortByDate);
+filterSelect.addEventListener('change', filterTasks);
+searchInput.addEventListener('input', searchTasks);
 
 // Functions
 
@@ -204,18 +206,48 @@ function sortByDate() {
   const tasks = getTasks();
   const direction = sortDirectionSelect.value;
 
+  while (toDoList.firstChild) {
+    toDoList.removeChild(toDoList.firstChild);
+  }
+
   tasks.sort((a, b) => {
-    if (!a.date) return 1;
-    if (!b.date) return -1;
     const diff = new Date(a.date) - new Date(b.date);
     return direction === 'asc' ? diff : -diff;
   });
 
   localStorage.setItem('tasks', JSON.stringify(tasks));
+
+  tasks.forEach(createTaskElement);
+}
+
+function filterTasks() {
+  const tasks = getTasks();
+  const filterValue = filterSelect.value;
+
   while (toDoList.firstChild) {
     toDoList.removeChild(toDoList.firstChild);
   }
-  loadTasks();
+
+  const filtered = tasks.filter(task => {
+    if (filterValue === 'all') return true;
+    if (filterValue === 'done') return task.done;
+    if (filterValue === 'undone') return !task.done;
+  });
+
+  filtered.forEach(createTaskElement);
+}
+
+function searchTasks() {
+  const tasks = getTasks();
+  const query = searchInput.value.trim().toLowerCase();
+
+  while (toDoList.firstChild) {
+    toDoList.removeChild(toDoList.firstChild);
+  }
+
+  const filtered = tasks.filter(task => task.text.toLowerCase().includes(query));
+
+  filtered.forEach(createTaskElement);
 }
 
 // localStorage
@@ -272,8 +304,8 @@ function reindexTasks() {
 
     newTasks.push({
       id: i,
-      text: span ? span.textContent : '',
-      date: dateInput ? dateInput.value : '',
+      text: span.textContent,
+      date: dateInput.value,
       done
     });
 
