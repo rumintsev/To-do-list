@@ -1,6 +1,16 @@
 // Creating a main input field
 
+const header = document.createElement('header');
 const main = document.createElement('main');
+const footer = document.createElement('footer');
+
+const h1 = document.createElement('h1');
+h1.textContent = 'TO-DO LIST';
+header.append(h1);
+
+const h2 = document.createElement('h2');
+h2.textContent = 'DESIGNED AND DEVELOPED BY NE_MIKEXD';
+footer.append(h2);
 
 const taskInput = document.createElement('input');
 taskInput.type = 'text';
@@ -18,7 +28,7 @@ addBtn.textContent = 'Добавить';
 const searchInput = document.createElement('input');
 searchInput.type = 'text';
 searchInput.classList.add('searchInput');
-searchInput.placeholder = 'Название...';
+searchInput.placeholder = 'Поиск...';
 
 const filterSelect = document.createElement('select');
 filterSelect.classList.add('filterSelect');
@@ -57,8 +67,16 @@ sortDirectionSelect.append(optionDesc, optionAsc);
 const toDoList = document.createElement('ul');
 toDoList.classList.add('toDoList');
 
-main.append(taskInput, dateInputMain, addBtn, searchInput, filterSelect, sortDateBtn, sortDirectionSelect, toDoList);
-document.body.appendChild(main);
+const inputGroup = document.createElement('div');
+inputGroup.classList.add('inputGroup');
+inputGroup.append(taskInput, dateInputMain, addBtn);
+
+const sortGroup = document.createElement('div');
+sortGroup.classList.add('sortGroup');
+sortGroup.append(sortDateBtn, sortDirectionSelect);
+
+main.append(inputGroup, searchInput, filterSelect, sortGroup, toDoList);
+document.body.append(header, main, footer);
 
 // Rendering tasks from local storage
 
@@ -129,6 +147,15 @@ function createTaskElement(task) {
   removeBtn.classList.add('remove');
 
   li.id = task.id;
+
+  const dragHandle = document.createElement('div');
+  dragHandle.classList.add('dragHandle');
+  for (let i = 0; i < 6; i++) {
+    const dot = document.createElement('span');
+    dragHandle.appendChild(dot);
+  }
+
+  li.appendChild(dragHandle);
   li.appendChild(doneBtn);
   li.appendChild(span);
   li.appendChild(dateInput);

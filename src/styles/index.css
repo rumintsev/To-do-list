@@ -1,7 +1,176 @@
-.done span{
-  text-decoration: line-through;
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
 }
+
+h1 {
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin-top: 20px;
+  color: #979797;
+}
+
+main {
+  padding: 30px;
+  border-radius: 15px;
+  border: 1px solid #dddad4;
+  width: 100%;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.inputGroup,
+.sortGroup {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.sortGroup {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+}
+
+.taskInput,
+.searchInput,
+.filterSelect,
+.sortDirectionSelect,
+input[type="date"] {
+  padding: 12px 14px;
+  border: 1px solid #dddad4;
+  border-radius: 10px;
+  flex: 1;
+}
+
+.taskInput:focus,
+.searchInput:focus,
+.filterSelect:focus,
+.sortDirectionSelect:focus,
+input[type="date"]:focus {
+  outline: none;
+  border-color: #b1ada7;
+}
+
+.addBtn,
+.sortDateBtn {
+  padding: 0 14px;
+  background-color: #0C4651;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.addBtn:hover,
+.sortDateBtn:hover {
+  background-color: #09333b;
+}
+
+.toDoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.toDoList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 10px;
+  padding: 12px 14px;
+  border: 1px solid #dddad4;
+}
+
+.toDoList li:hover {
+  background-color: #fffcf6;
+}
+
+.toDoList li span {
+  flex: 1;
+  cursor: text;
+  outline: none;
+  word-break: break-word;
+}
+
+.toDoList li.done span {
+  text-decoration: line-through;
+  color: #888888;
+}
+
+.toDoList li.done input {
+  color: #888888;
+}
+
 li.dragging {
   opacity: 0.5;
-  background-color: #f0f0f0;
+}
+
+.toDoList li button.done,
+.toDoList li button.remove {
+  border: 1px solid #a09d99;
+  border-radius: 5px;
+  color: #6b6864;
+  background: none;
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.toDoList li button.done {
+  margin-right: 20px;
+}
+
+.toDoList li button.remove,
+.task-date {
+  margin-left: 20px;
+}
+
+.toDoList li button.done:hover {
+  background-color: #0C4651;
+  color: white;
+  border: none;
+}
+
+.toDoList li button.remove:hover {
+  background-color: #d41d1d;
+  color: white;
+  border: none;
+}
+
+.toDoList li.done button.done {
+  background-color: #0C4651;
+  color: white;
+  border-color: #0C4651;
+}
+
+.toDoList li .dragHandle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px 2px;
+  width: 12px;
+  cursor: grab;
+  margin-right: 10px;
+  padding: 10px;
+}
+
+.toDoList li .dragHandle span {
+  display: block;
+  width: 4px;
+  height: 4px;
+  background-color: #0C4651;
+  border-radius: 50%;
 }

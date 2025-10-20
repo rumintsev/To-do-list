@@ -12,31 +12,5 @@
   font-family: 'Inter', sans-serif;
   font-weight: 400;
   font-style: normal;
-}
-
-body {
-  margin: 0;
-}
-
-main {
-  /* min-height: calc(100vh - 262px); */
-  /* header 71 + footer 131 + footer margin 40 + header margin 20*/
-}
-
-footer {
-  background-color: #111111;
-  color: white;
-  padding: 30px 16px;
-  margin-top: 40px;
-}
-
-footer .content {
-  margin: 0 auto;
-  max-width: 900px;
-  text-align: center;
-}
-
-footer h2 {
-  font-size: 32px;
-  margin-bottom: 10px;
+  font-size: 16px;
 }
