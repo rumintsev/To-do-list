@@ -98,10 +98,6 @@ input[type="date"]:focus {
   border: 1px solid #dddad4;
 }
 
-.toDoList li:hover {
-  background-color: #fffcf6;
-}
-
 .toDoList li span {
   flex: 1;
   cursor: text;
@@ -142,7 +138,7 @@ li.dragging {
 }
 
 .toDoList li button.remove,
-.task-date {
+.taskDate {
   margin-left: 20px;
 }
 
@@ -190,5 +186,20 @@ li.dragging {
   .inputGroup {
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+
+  .toDoList li {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .toDoList .taskDate {
+    flex-basis: 100%;
+    order: 2;
+    margin-left: 40px;
+  }
+
+  .toDoList .remove {
+    order: 1;
   }
 }

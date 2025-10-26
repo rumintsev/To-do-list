@@ -134,7 +134,7 @@ function createTaskElement(task) {
   const dateInput = document.createElement('input');
   dateInput.type = 'date';
   dateInput.value = task.date;
-  dateInput.classList.add('task-date');
+  dateInput.classList.add('taskDate');
   dateInput.addEventListener('change', () => {
     updateTaskDate(li.id, dateInput.value);
   });
