@@ -19,22 +19,29 @@ main {
   border-radius: 15px;
   border: 1px solid #dddad4;
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   display: flex;
   flex-direction: column;
   gap: 15px;
+  box-sizing: border-box;
 }
 
 .inputGroup,
 .sortGroup {
-  display: flex;
+  display: grid;
   gap: 10px;
-  align-items: stretch;
+}
+
+.inputGroup {
+  grid-template-columns: 3fr 1fr 1fr;
 }
 
 .sortGroup {
-  display: grid;
   grid-template-columns: 3fr 1fr;
+}
+
+.taskInput {
+  width: 100%;
 }
 
 .taskInput,
@@ -45,7 +52,7 @@ input[type="date"] {
   padding: 12px 14px;
   border: 1px solid #dddad4;
   border-radius: 10px;
-  flex: 1;
+  box-sizing: border-box;
 }
 
 .taskInput:focus,
@@ -173,4 +180,15 @@ li.dragging {
   height: 4px;
   background-color: #0C4651;
   border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+  .taskInput {
+    grid-column: 1 / -1;
+  }
+
+  .inputGroup {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
