@@ -83,6 +83,7 @@ document.body.append(header, main, footer);
 window.addEventListener('DOMContentLoaded', () => {
   loadTasks();
   enableDragAndDrop();
+  enableTouchDragAndDrop();
 });
 
 addBtn.addEventListener('click', addTask);
@@ -227,6 +228,43 @@ function enableDragAndDrop() {
 
     if (after) toDoList.insertBefore(dragging, after);
     else toDoList.appendChild(dragging);
+  });
+}
+
+function enableTouchDragAndDrop() {
+  let dragging = null;
+
+  toDoList.addEventListener('touchstart', (e) => {
+    const li = e.target.closest('li');
+    if (!li) return;
+    dragging = li;
+    li.classList.add('dragging');
+  });
+
+  toDoList.addEventListener('touchmove', (e) => {
+    if (!dragging) return;
+    const touch = e.touches[0];
+    const y = touch.clientY;
+
+    let after = null;
+    for (const li of toDoList.querySelectorAll('li:not(.dragging)')) {
+      const rect = li.getBoundingClientRect();
+      if (y < rect.top + rect.height / 2) {
+        after = li;
+        break;
+      }
+    }
+
+    if (after) toDoList.insertBefore(dragging, after);
+    else toDoList.appendChild(dragging);
+  });
+
+  toDoList.addEventListener('touchend', () => {
+    if (dragging) {
+      dragging.classList.remove('dragging');
+      reindexTasks();
+      dragging = null;
+    }
   });
 }
 
