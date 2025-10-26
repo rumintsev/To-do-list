@@ -194,6 +194,7 @@ li.dragging {
   }
 
   .toDoList .taskDate {
+    margin-top: 10px;
     flex-basis: 100%;
     order: 2;
     margin-left: 40px;
